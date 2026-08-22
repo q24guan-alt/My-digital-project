@@ -7,7 +7,7 @@ Keys={
     "down":pygame.K_s,
     "left":pygame.K_a,
     "right":pygame.K_d,
-    "attack":"mouse",
+    "attack":0,
     "backpack":pygame.K_e,
     "guide board":pygame.K_c,
     "stop": pygame.K_ESCAPE

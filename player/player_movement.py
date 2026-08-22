@@ -8,12 +8,17 @@ spec = importlib.util.spec_from_file_location("setting", file_path)
 setting = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(setting)
 
+import importlib.util
+
 file_path = r"C:\Users\28212\PycharmProjects\PythonProject1\Y 12 Digital  project\player\player_statement.py"
 
-spec = importlib.util.spec_from_file_location("player_statement", file_path)
+spec = importlib.util.spec_from_file_location(
+    "player_statement",
+    file_path
+)
+
 player_statement = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(player_statement)
-
 
 up_key=setting.Keys["up"]
 down_key=setting.Keys["down"]

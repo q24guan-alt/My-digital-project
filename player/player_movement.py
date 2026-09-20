@@ -1,49 +1,35 @@
-import importlib.util
+from core import page_manager
+from UI import setting
+from player import player_statement
+import pygame as pg
+from player.character_animation import animator
+player_rect=pg.Rect(400,300,20,20)
+facing_right = True
+def update():
+    global facing_right
+    if page_manager.page_state is not None:
+        return
+    keys=pg.key.get_pressed()
+    speed = player_statement.Speed * (player_statement.Extra["Speed_Extra"] + 1) # calculate speed
+    if keys[pg.K_j]:
+        animator.trigger_attack()
 
-import pygame
-
-file_path = r"C:\Users\28212\PycharmProjects\PythonProject1\Y 12 Digital  project\UI\setting.py"
-
-spec = importlib.util.spec_from_file_location("setting", file_path)
-setting = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(setting)
-
-import importlib.util
-
-file_path = r"C:\Users\28212\PycharmProjects\PythonProject1\Y 12 Digital  project\player\player_statement.py"
-
-spec = importlib.util.spec_from_file_location(
-    "player_statement",
-    file_path
-)
-
-player_statement = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(player_statement)
-
-up_key=setting.Keys["up"]
-down_key=setting.Keys["down"]
-left_key=setting.Keys["left"]
-right_key=setting.Keys["right"]
-
-
-key=pygame.key.get_pressed()
-base_speed=20
-def get_movement():
-
-    keys = pygame.key.get_pressed()
-    movement_direction = "idle"
-    speed=base_speed*(1+player_statement.Extra ["movement_Extra"])
-    if keys[up_key]:
-        movement_direction="up"
-
-    elif keys[down_key]:
-        movement_direction="down"
-
-    elif keys[left_key]:
-        movement_direction="left"
-
-    elif keys[right_key]:
-        movement_direction="right"
-
-
-    return movement_direction,speed
+    is_moving = False
+    if not animator.is_attacking:
+        if keys[setting.Keys["Move_up"]]:#check player use keyboard
+            player_rect.y -= speed
+            is_moving = True
+        elif keys[setting.Keys["Move_down"]]:
+            player_rect.y += speed
+            is_moving = True
+        elif keys[setting.Keys["Move_left"]]:
+            player_rect.x -= speed
+            is_moving = True
+            facing_right = False
+        elif keys[setting.Keys["Move_right"]]:
+            player_rect.x += speed
+            is_moving = True
+            facing_right = True
+    animator.update(is_moving, facing_right)
+def draw(screen):
+    animator.draw(screen, player_rect)

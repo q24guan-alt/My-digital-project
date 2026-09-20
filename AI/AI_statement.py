@@ -1,34 +1,56 @@
 import math
-
-AI_statement = 0
-
-player_x1 = 0
-player_y1 = 0
-AI_x1 = 0
-AI_y1 = 0
+import random
+import pygame as pg
+from player import player_movement, player_statement
+from AI import AI_character
 
 
-def update_AI(player_x, player_y, monster_x, monster_y):
 
-    global AI_statement
-    global player_x1
-    global player_y1
-    global AI_x1
-    global AI_y1
+class EnemyAI:
+    def __init__(self, x, y, ai_type_name):
+        data = AI_character.AI_types[ai_type_name]
+        self.speed = data["speed"]
+        self.attack_power = data["attack"]
+        self.hp = data["HP"]
+        self.max_attack_time = data["attack_time"]
 
-    player_x1 = player_x
-    player_y1 = player_y
-    AI_x1 = monster_x
-    AI_y1 = monster_y
+        self.rect = pg.Rect(x, y, 20, 20)
+        self.attack_time = 0
+        self.patrol_dir = 0
+        self.patrol_time = 0
 
-    distance = math.sqrt(
-        (player_x1 - AI_x1) ** 2 +
-        (player_y1 - AI_y1) ** 2
-    )
+    def update(self):
+        dx = player_movement.player_rect.centerx - self.rect.centerx
+        dy = player_movement.player_rect.centery - self.rect.centery
+        distance = math.hypot(dx, dy)
 
-    if distance <= 100:
-        AI_statement = 1
-    else:
-        AI_statement = 0
+        if distance > 500:
+            if self.patrol_time <= 0:
+                self.patrol_dir = random.randint(1, 4)
+                self.patrol_time = 30
 
-    return AI_statement
+            if self.patrol_dir == 1:
+                self.rect.x -= self.speed
+            elif self.patrol_dir == 2:
+                self.rect.x += self.speed
+            elif self.patrol_dir == 3:
+                self.rect.y -= self.speed
+            elif self.patrol_dir == 4:
+                self.rect.y += self.speed
+
+            self.patrol_time -= 1
+
+        elif 35 < distance <= 500:
+            self.patrol_time = 0
+            self.rect.x += round((dx / distance) * self.speed)
+            self.rect.y += round((dy / distance) * self.speed)
+
+        elif distance <= 35:
+            if self.attack_time <= 0:
+                player_statement.hp -= self.attack_power
+                self.attack_time = self.max_attack_time
+
+        if self.attack_time > 0:
+            self.attack_time -= 1
+    def draw(self, screen):
+        pg.draw.rect(screen,(250,0,0),(self.rect.x,self.rect.y,20,20))

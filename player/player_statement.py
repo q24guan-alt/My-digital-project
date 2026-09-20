@@ -1,40 +1,31 @@
-import pygame
-from AI import AI_character
+import pygame as pg
 from UI import setting
-Oxygen= 100
-Oxygen_decrease = 10
-Oxygen_increase = 20
-Hp= 100
-attack= 40
-attack_time=0
-Extra={
-    "movement_Extra":0,
-    "attack_Extra":0,
-    "HP_Extra":0
+from map import room
 
-}
+#player data
+HP=100
+hurt_cooldown=800
+Attack=20
+Speed=10
+Oxygen=100
+last_hurt_time=0
+attack_timer=5
+Extra={"Attack_Extra":0,"Speed_Extra":0,"Oxygen_Extra":0}
+player_rect=pg.Rect(400,300,20,20)
+def check_trap_collision(traps,damage=10):
+    global HP,last_hurt_time
+    now=pg.time.get_ticks()
+    if now-last_hurt_time< hurt_cooldown:
+        return False
+    padding=8
+    size=room.Tile_size-padding*2
+    for col,row,x,y in traps:
+        hitbox=pg.Rect(x+padding,y+padding,size,size)
+        if player_rect.colliderect(hitbox):
+            HP=max(0,HP-damage)
+            last_hurt_time=now
+            return True
 
-room=1
-if room == 1 and Oxygen < 100:
-    Oxygen += 1
-elif room == 0:
-    Oxygen -= 1
-
-while running:
-
-    for event in pygame.event.get():
-
-        if event.type == pygame.QUIT:
-            running = False
-
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == setting.Keys["attack"] and attack_time <= 0:
-                AI_character.HP -= attack * (
-                    1 + Extra["attack_Extra"]
-                )
-                attack_timer = 30
-
-    if attack_time > 0:
-        attack_time -= 1
+    return False
 
 

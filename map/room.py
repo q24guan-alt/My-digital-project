@@ -42,7 +42,6 @@ class Room:
             if self.room_type=="Battle":
                   count=random.randint(4,7)
                   result=[EnemyAI(random.randint(60,740),random.randint(60,640),"normal_AI")for _ in range(count) ]
-                  print(f"[_generate_AI] stage={self.stage} direction={self.direction} generated {len(result)} enemies")
                   return result
             if self.room_type=="boss":
                   return[EnemyAI(400,350,"BOSS")]
@@ -67,7 +66,6 @@ class Room:
                   hitbox=pg.Rect(x+padding,y+padding,size,size)
                   if enemy.rect.colliderect(hitbox):
                         enemy.hp-=damage
-                        print("enemy hit, hp =", enemy.hp)
                         enemy.trap_cooldown=cooldown
                         return True
             return False

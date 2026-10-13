@@ -1,7 +1,7 @@
 AI_types={
     "normal_AI":{
-        "speed":10,
-        "attack":20,
+        "speed":1,
+        "attack":10,
         "HP":30,
         "attack_time":5
     },

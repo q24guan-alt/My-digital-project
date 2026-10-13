@@ -5,15 +5,12 @@ remapping_action=None
 font=None
 key_rects={}
 #player keyboard document
-Keys = {
-    "Move_up":pg.K_w,
-    "Move_down":pg.K_s,
-    "Move_left":pg.K_a,
-    "Move_right":pg.K_d,
-    "Attack":pg.MOUSEBUTTONDOWN,
-    "backpack":pg.K_b,
+keys = {
+    "move_up":pg.K_w,
+    "move_down":pg.K_s,
+    "move_left":pg.K_a,
+    "move_right":pg.K_d,
     "setting":pg.K_n,
-    "Stop":pg.K_ESCAPE
 }
 inventory_mod="Number"
 
@@ -23,23 +20,23 @@ def init_font():
 
 def save_keys():
     with open("settings.json","w") as file:
-        json.dump(Keys,file)
+        json.dump(keys,file)
 
 def load_keys():
-    global Keys
+    global keys
     if os.path.exists("settings.json"):
         with open("settings.json","r") as file:
             saved=json.load(file)
-            Keys.update(saved)
+            keys.update(saved)
 
 def remap_keys(action,newkey):
-    Keys[action]=newkey
+    keys[action]=newkey
     save_keys()
 
 def handle_event(event):
     global remapping_action
     if remapping_action and event.type == pg.KEYDOWN:
-        Keys[remapping_action]=event.key
+        keys[remapping_action]=event.key
         save_keys()
         remapping_action=None
         return
@@ -58,13 +55,13 @@ def draw(screen):
     pg.draw.rect(screen,(245,245,245),panel_rect)
     pg.draw.rect(screen,(60,60,60),panel_rect,width=2)
 
-    title=font.render("Settings",True,(40,40,40))
+    title=font.render("settings",True,(40,40,40))
     screen.blit(title,(panel_rect.x+20,panel_rect.y+15))
 
     key_rects={}
     y=panel_rect.y+50
 
-    for action,keycode in Keys.items():
+    for action,keycode in keys.items():
         label=font.render(action,True,(40,40,40))
         screen.blit(label,(panel_rect.x+20,y))
 
@@ -74,7 +71,7 @@ def draw(screen):
         pg.draw.rect(screen,color,key_rect)
         pg.draw.rect(screen,(60,60,60),key_rect,width=1)
 
-        key_name=pg.key.name(keycode) if isinstance(keycode, int) else "Mouse"
+        key_name=pg.key.name(keycode) if isinstance(keycode, int) else "mouse"
         key_text=font.render(key_name,True,(40,40,40))
         screen.blit(key_text,(key_rect.x+5,y+5))
 

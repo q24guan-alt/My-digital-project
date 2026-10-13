@@ -1,4 +1,5 @@
 from UI import setting
+from UI import hud
 import pygame as pg
 
 page_state=None
@@ -16,7 +17,7 @@ def toggle(page_name):
 
 def handle_event(event):
     if event.type==pg.KEYDOWN:
-        for action, keycode in setting.Keys.items():
+        for action, keycode in setting.keys.items():
             if event.key==keycode and action in page_modules:
                 toggle(action)
                 return True

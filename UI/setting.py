@@ -1,10 +1,10 @@
 import pygame as pg
 import json
 import os
+#
 remapping_action=None
 font=None
 key_rects={}
-#player keyboard document
 keys = {
     "move_up":pg.K_w,
     "move_down":pg.K_s,

@@ -1,3 +1,4 @@
+#character normal data
 AI_types={
     "normal_AI":{
         "speed":1,
@@ -6,9 +7,9 @@ AI_types={
         "attack_time":5
     },
     "BOSS":{
-        "speed":10,
-        "attack":30,
+        "speed":3,
+        "attack":20,
         "HP":50,
-        "attack_time":30
+        "attack_time":20
     }
 }

@@ -26,6 +26,9 @@ def update():
     global facing_right,facing_dir
     if page_manager.page_state is not None:
         return
+    if animator.is_dead:
+        animator.update(False,facing_right)
+        return
     keys=pg.key.get_pressed()
     speed = player_statement.get_speed()
     player_statement.update_attack_cooldown()

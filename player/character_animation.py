@@ -8,6 +8,8 @@ class PlayerAnimator:
         self.anim_timer = 0
         self.facing_right = True
         self.is_attacking = False
+        self.is_dead=False
+        self.death_done=False
         self.animations = None
 
     def init_frames(self):
@@ -40,14 +42,6 @@ class PlayerAnimator:
             "idle": [
                 crop(10, 16)
             ],
-
-            "reload": [
-                crop(10, 80),
-                crop(42, 80),
-                crop(74, 80),
-                crop(106, 80),
-                crop(138, 80)
-            ],
             "run": [
                 crop(8, 108,16,20),
                 crop(40, 108,16,20),
@@ -62,20 +56,25 @@ class PlayerAnimator:
                 crop(106,144)
             ],
             "death": [
-                crop(0, 80),
-                crop(16, 80),
-                crop(32, 80),
-                crop(48, 80),
-                crop(64, 80),
-                crop(80, 80),
-                crop(96, 80)
+                crop(5,175,20,18),
+                crop(37,175,21,22),
+                crop(68,170,23,23)
             ]
         }
 
     def trigger_attack(self):
-        if not self.is_attacking:
+        if not self.is_attacking and not self.is_dead:
             self.is_attacking = True
             self.current_action = "shoot"
+            self.frame_index = 0
+            self.anim_timer = 0
+
+    def trigger_death(self):
+        if not self.is_dead:
+            self.is_dead = True
+            self.death_done = False
+            self.is_attacking = False
+            self.current_action="death"
             self.frame_index = 0
             self.anim_timer = 0
 
@@ -83,13 +82,26 @@ class PlayerAnimator:
         self.init_frames()
         self.facing_right = facing_right
 
+        if self.is_dead:
+            frames = self.animations.get("death", [])
+            if not frames:
+                self.death_done = True
+                return
+            self.anim_timer += 1
+            if self.anim_timer >= 6:
+                self.anim_timer = 0
+                self.frame_index +=1
+                if self.frame_index >= len(frames):
+                    self.frame_index=len(frames)-1
+                    self.death_done = True
+            return
+
         if self.is_attacking:
             frames = self.animations.get("shoot", [])
             if not frames:
                 self.is_attacking = False
                 self.current_action = "idle"
                 return
-
             self.anim_timer += 1
             if self.anim_timer >= 6:
                 self.anim_timer = 0

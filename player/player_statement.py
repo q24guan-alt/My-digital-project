@@ -3,12 +3,11 @@ from UI import setting
 from map import room
 
 #player data
-hp=10000
-max_hp=1000
+hp=100
+max_hp=100
 hurt_cooldown=800
-attack=2000
+attack=30
 speed=3
-oxygen=100
 last_hurt_time=0
 attack_timer=20
 _attack_cooldown=0

@@ -1,3 +1,4 @@
+import math
 from core import page_manager
 from UI import setting
 from player import player_statement
@@ -64,7 +65,25 @@ def update():
         laser.update()
     lasers[:] = [laser for laser in lasers if laser.alive]
 
+def draw_aim_indicator(screen):
+    cx,cy=player_rect.center
+    vx,vy=VEC[facing_dir]
+    base_angle=math.atan2(vy,vx)
+
+    color=(255,220,70)
+    center_len=65
+    side_len=35
+    side_angle=math.radians(30)
+    end_center=(cx+vx*center_len,cy+vy*side_len)
+    pg.draw.line(screen,color,(cx,cy),end_center,3)
+
+    for sign in(-1,1):
+        angle=base_angle+sign*side_angle
+        end=(cx+math.cos(angle)*side_len,cy+math.sin(angle)*side_len)
+        pg.draw.line(screen,(255,255,255),(cx,cy),end,1)
+
 def draw(screen):
     animator.draw(screen, player_rect)
+    draw_aim_indicator(screen)
     for laser in lasers:
         laser.draw(screen)

@@ -20,8 +20,8 @@ def toggle(page_name):
 #Detect events, such as use button open setting
 def handle_event(event):
     if event.type==pg.KEYDOWN:
-        for action, keycode in setting.keys.items():
-            if event.key==keycode and action in page_modules:
+        for action, key_code in setting.keys_bindings.items():
+            if event.key==key_code and action in page_modules:
                 toggle(action)
                 return True
     if page_state:

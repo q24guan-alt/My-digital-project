@@ -1,4 +1,4 @@
-# This park import code from different file
+# import code from other file
 import pygame as pg
 from UI import setting,hud,guide
 from core import page_manager
@@ -9,7 +9,7 @@ pg.init()
 screen = pg.display.set_mode((800,700))
 clock = pg.time.Clock()
 running = True
-#Loading key bindings and recording other page of the game
+#Loading save key bindings and registers page managed by the page manager
 setting.load_keys()
 page_manager.register("setting",setting)
 page_manager.register("game_over",hud)

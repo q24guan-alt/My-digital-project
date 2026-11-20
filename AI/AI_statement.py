@@ -4,8 +4,9 @@ import random
 import pygame as pg
 from player import player_movement, player_statement
 from AI import AI_character
-from AI.AI_animation import AiAnimator
+from AI.AI_animation import AIAnimator
 
+#Managing data, animation and state for AI
 # design enemy and read enemy data from AI character for how many enemy in the room. and choice different animation for different type enemy
 class EnemyAI:
     def __init__(self, x, y, ai_type_name):
@@ -18,14 +19,15 @@ class EnemyAI:
         self.max_attack_time = data["attack_time"]
         self.rect = pg.Rect(x, y, 20, 20)
         self.attack_time = 0
-        self.patrol_dir = 0
+        self.patrol_dir = 0#move direction
         self.patrol_time = 0
         room_bounds = pg.Rect(20, 20, 760, 660)
         self.rect.clamp_ip(room_bounds)
+        #log in different animation to different type AI
         if ai_type_name == "BOSS":
-            self.animator=AiAnimator("Blood Monster_A.png",scale=5)
+            self.animator=AIAnimator("Blood Monster_A.png",scale=5)
         else:
-            self.animator=AiAnimator("Demon_A.png",scale=3)
+            self.animator=AIAnimator("Demon_A.png",scale=3)
         self._prev_hp = self.hp
 #Control the enemy by distance between the AI with player and random variable, paused is check did other page is open pass behavior
     def update(self,paused=False):
@@ -34,9 +36,13 @@ class EnemyAI:
         distance = math.hypot(dx, dy)
         if paused:
             return
+        #check the hp and trigger hurt animation
         if self.hp<self._prev_hp and self.hp>0:
             self.animator.trigger_hurt()
         self._prev_hp = self.hp
+        #move state
+        #move time control AI when they didn't follow player and they well chang different direction
+        #when patrol back to zero
         if distance > 500:
             if self.patrol_time <= 0:
                 self.patrol_dir = random.randint(1, 4)
@@ -59,16 +65,18 @@ class EnemyAI:
                 self.animator.trigger_attack()
                 player_statement.hp -= self.attack_power
                 self.attack_time = self.max_attack_time
+        #import move state to AI_animation file
         is_moving=self.patrol_time>0 or (35<distance<500)
         self.animator.update(is_moving)
         if self.attack_time > 0:
             self.attack_time -= 1
+
 #check distance between AI and blocker, and stop or attack then when AI close different blocker
         from map import map_manager
         from map import room as room_module
         current_room = map_manager._instance.current
         for col, row, ox, oy in current_room.obstacles:
-            obstacle = pg.Rect(ox, oy, room_module.Tile_size, room_module.Tile_size)
+            obstacle = pg.Rect(ox, oy, room_module.TILE_SIZE, room_module.TILE_SIZE)
             if self.rect.colliderect(obstacle):
                 if self.rect.centery < obstacle.centery:
                     self.rect.right = obstacle.left

@@ -3,21 +3,21 @@ import pygame as pg
 from core import page_manager
 #variable for check page it is open or close and document text for guide and design button size for open button
 show_guide = True
-GUIDE_LINS=[
+GUIDE_LINES=[
     "WASD is move key",
     "MOUSE is attack button",
     "THE door will open when they finish room",
     "N is key for open the setting webpage, It's help change move button",
 ]
 help_button_rect=pg.Rect(760,220,30,30)
-#design size and font for print text
+#design size and font for print text.
 _font=None
 def _get_font(size=20):
     global _font
     if _font is None:
         _font = pg.font.SysFont("microsoftyaheu", size)
     return _font
-# The button for open page on the screen.
+# The button for open page on the screen, make easy help player open page
 def handle_event(event):
     global show_guide
     if show_guide:
@@ -26,12 +26,12 @@ def handle_event(event):
         return
     if event.type == pg.MOUSEBUTTONDOWN and help_button_rect.collidepoint(event.pos):
         show_guide = True
-#Draw the guide button
+#Draw the guide button for reopen the guide page when player playing game.
 def draw_help_button(screen):
     pg.draw.rect(screen,(80,80,80),help_button_rect)
     text= _get_font().render("?",True,(255,255,255))
     screen.blit(text,text.get_rect(center=help_button_rect.center))
-#Draw the page
+#Draw the page and stop player control the playing screen before him close guide page.
 def draw_guide(screen):
     if not show_guide:
         return
@@ -40,7 +40,7 @@ def draw_guide(screen):
     screen.blit(overlay,(0,0))
     y=250
     y+=40
-    for line in GUIDE_LINS:
+    for line in GUIDE_LINES:
         text=_get_font(24).render(line,True,(255,255,255))
         screen.blit(text,text.get_rect(center=(400,y)))
         y+=30
